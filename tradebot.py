@@ -217,17 +217,22 @@ def load_config():
 
     config_file = "config.json"
 
-    with open(config_file, "r") as f:
-        config = json.load(f)
-        league_id_g = config["league_id"]
-        groupme_bot_id_g = config["groupme_bot_id"]
-        year_g = config["year"]
-        mfl_user_agent_g = config["mfl_user_agent"]
+    # with open(config_file, "r") as f:
+        # config = json.load(f)
+        # league_id_g = config["league_id"]
+        # groupme_bot_id_g = config["groupme_bot_id"]
+        # year_g = config["year"]
+        # mfl_user_agent_g = config["mfl_user_agent"]
 
-    # mfl_user_agent_g = os.environ["MFL_USER_ID"]
-    # league_id_g = os.environ["MFL_LEAGUE_ID"]
-    # groupme_bot_id_g = os.environ["GROUPME_BOT_ID"]
+    mfl_user_agent_g = os.environ.get("MFL_USER_ID")
+    league_id_g = os.environ.get("MFL_LEAGUE_ID")
+    groupme_bot_id_g = os.environ.get("GROUPME_BOT_ID")
+    year_g = "2020"
     
+    print("mfl_user_agent_g: " + str(mfl_user_agent_g))
+    print("league_id_g: " + league_id_g)
+    print("groupme_bot_id_g: " + groupme_bot_id_g)
+
     if not league_id_g or not year_g or not mfl_user_agent_g:
         print("config.json missing mfl league information")
     
@@ -241,15 +246,18 @@ def load_config():
         print("Loaded " + config_file + "...")
         return True
 
+def run_tradebot():
+    load_timestamp()
+    get_rosters()
+    get_league()
+    get_players()
+    process_trades(get_trades())
+
 def main():
     if load_config():
-        load_timestamp()
-        get_rosters()
-        get_league()
-        get_players()
-        process_trades(get_trades())
+        run_tradebot()
     else:
-        print("Incorrect config.json options")
+        print("Something's wrong in the config file")
 
 
 if __name__ == "__main__":
